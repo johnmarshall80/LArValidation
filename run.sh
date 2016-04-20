@@ -4,8 +4,17 @@ export CRON_HOME=/usera/marshall/Test/cron
 export OUTPUT=/r05/dune/marshall/cron/run
 
 # Setup input files, etc.
-export LARSOFT_VERSION='v04_16_00'
+export LARSOFT_VERSION=${1}
 export DATE=`date +"%d-%m-%y"`
+
+if [ ${LARSOFT_VERSION} == "v05_04_00" ]
+then
+    export REGEX="reco1"
+    export FILE_PATH="/r05/dune/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone_100k"
+else
+    export REGEX="Neutrino"
+    export FILE_PATH="/r05/lbne/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone"
+fi
 
 export DIRECTORY=${OUTPUT}/${LARSOFT_VERSION}_${DATE}
 if [ -d "$DIRECTORY" ]; then rm -r $DIRECTORY; fi
@@ -16,13 +25,13 @@ cp $CRON_HOME/LArReco/scripts/uboone/PandoraSettings_MicroBooNE_Validation.xml .
 
 # Run Pandora
 counter=0; max=1000;
-for i in `ls /r05/lbne/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone/uBooNE_Events_100_*Neutrino.pndr | sort -V`
+for i in `ls ${FILE_PATH}/*${REGEX}.pndr | sort -V`
 do
     counter=$[$counter+1]
     if [ $counter -gt $max ]; then break; fi
 
     echo $i
-    fileIdentifier=$[`echo $i | grep -oP '(?<=_)\d+(?=_Neutrino\.)'`]
+    fileIdentifier=$[`echo $i | grep -oP '(?<=_)\d+(?=_${REGEX}\.)'`]
     outputFile=tmp_$fileIdentifier.root;
     sed -e s,INPUT_FILE_NAME,$i, -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, PandoraSettings_Template.xml > tmp.xml
 

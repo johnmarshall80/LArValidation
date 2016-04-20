@@ -24,17 +24,26 @@
 </head>
 
 <form name="DatePicker" method="post">
-    Date: <input type="text" id="datepicker" name="datepicker"/> <input type="text" size=30 id="alternate" name="alternate"/>
+    Version:
+    <select name="myversion">
+        <option value="v04_16_00" <?php echo ($_POST['myversion'] == 'v04_16_00') ? 'selected' : ''; ?> >v04_16_00</option>
+        <option value="v05_04_00" <?php echo ($_POST['myversion'] == 'v05_04_00') ? 'selected' : ''; ?> >v05_04_00</option>
+     </select>
+    Date:
+    <input type="text" id="datepicker" name="datepicker"/> <input type="text" size=30 id="alternate" name="alternate"/>
     <input type="submit">
 </form>
 
 <body>
     <?php
+        $myversion=$_POST['myversion'];
         $mydate=$_POST['datepicker'];
-        $mydir="run/v04_16_00_".$mydate;
-
         $myaltDate=$_POST['alternate'];
+
+        echo "<h4>$myversion</h4>";
         echo "<h4>$myaltDate</h4>";
+
+        $mydir="run/".$myversion."_".$mydate;
 
         if (file_exists($mydir. '/CorrectEventList.txt'))
         {

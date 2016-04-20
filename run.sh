@@ -11,9 +11,13 @@ if [ ${LARSOFT_VERSION} == "v05_04_00" ]
 then
     export REGEX="reco1"
     export FILE_PATH="/r05/dune/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone_100k"
+    export GEOMETRY_FILE_NAME="/r05/dune/mcproduction_v05_04_00/geometry_uboone/Geometry_MicroBooNE.pndr"
+    export READ_GEOMETRY="true"
 else
     export REGEX="Neutrino"
     export FILE_PATH="/r05/lbne/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone"
+    export GEOMETRY_FILE_NAME="NO_GEOMETRY"
+    export READ_GEOMETRY="false"
 fi
 
 export DIRECTORY=${OUTPUT}/${LARSOFT_VERSION}_${DATE}
@@ -33,7 +37,7 @@ do
     echo $i
     fileIdentifier=$[`echo $i | grep -oP '(?<=_)\d+(?=_${REGEX}\.)'`]
     outputFile=tmp_$fileIdentifier.root;
-    sed -e s,INPUT_FILE_NAME,$i, -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, PandoraSettings_Template.xml > tmp.xml
+    sed -e s,INPUT_FILE_NAME,$i, -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, -e s,GEOMETRY_FILE_NAME,$GEOMETRY_FILE_NAME, -e s,READ_GEOMETRY,$READ_GEOMETRY, PandoraSettings_Template.xml > tmp.xml
 
     ${CRON_HOME}/LArReco/bin/PandoraInterface -i tmp.xml -N -d uboone -n 100 > /dev/null
     rm tmp.xml

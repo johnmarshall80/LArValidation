@@ -35,7 +35,9 @@ do
     if [ $counter -gt $max ]; then break; fi
 
     echo $i
-    fileIdentifier=$[`echo $i | grep -oP '(?<=_)\d+(?=_${REGEX}\.)'`]
+    expression="(?<=_)\d+(?=_${REGEX}\.)"
+    fileIdentifier=$[`echo $i | grep -oP ${expression}`]
+
     outputFile=tmp_$fileIdentifier.root;
     sed -e s,INPUT_FILE_NAME,$i, -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, -e s,GEOMETRY_FILE_NAME,$GEOMETRY_FILE_NAME, -e s,READ_GEOMETRY,$READ_GEOMETRY, PandoraSettings_Template.xml > tmp.xml
 

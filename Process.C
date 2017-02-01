@@ -1,7 +1,13 @@
 void Process(const std::string &filePath, const std::string &fileName)
 {
     gROOT->LoadMacro("/usera/marshall/Test/cron/LArReco/validation/Validation.C+");
-    Validation(filePath + "/" + fileName, false, false, 0, 100000, 15, 5, true, false, false, "", "TableOutput.txt", "CorrectEventList.txt");
+
+    Parameters parameters;
+    parameters.m_mapFileName = "TableOutput.txt";
+    parameters.m_eventFileName = "CorrectEventList.txt";
+    parameters.m_histogramOutput = true;
+
+    Validation(filePath + "/" + fileName, parameters);
 
     // ATTN All of the below is just HORRIBLE, but is rather non-invasive to actual development code
     gROOT->SetBatch(kTRUE);

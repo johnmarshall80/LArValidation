@@ -41,7 +41,7 @@ do
     outputFile=tmp_$fileIdentifier.root;
     sed -e s,INPUT_FILE_NAME,$i, -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, -e s,GEOMETRY_FILE_NAME,$GEOMETRY_FILE_NAME, -e s,READ_GEOMETRY,$READ_GEOMETRY, PandoraSettings_Template.xml > tmp.xml
 
-    ${CRON_HOME}/LArReco/bin/PandoraInterface -i tmp.xml -N -d uboone -n 100 > /dev/null
+    ${CRON_HOME}/LArReco/bin/PandoraInterface -i tmp.xml -N -d /usera/marshall/Test/cron/LArReco/detectors/uboone.xml -n 100 > /dev/null
     rm tmp.xml
 done
 

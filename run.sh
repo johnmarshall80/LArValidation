@@ -11,13 +11,11 @@ if [ ${LARSOFT_VERSION} == "v05_04_00" ]
 then
     export REGEX="reco1"
     export FILE_PATH="/r05/dune/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone_100k"
-    export GEOMETRY_FILE_NAME="/r05/dune/mcproduction_v05_04_00/geometry_uboone/Geometry_MicroBooNE.pndr"
-    export READ_GEOMETRY="true"
+    export GEOMETRY_COMMAND="-g /r05/dune/mcproduction_v05_04_00/geometry_uboone/Geometry_MicroBooNE.pndr"
 else
     export REGEX="Neutrino"
     export FILE_PATH="/r05/lbne/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone"
-    export GEOMETRY_FILE_NAME="NO_GEOMETRY"
-    export READ_GEOMETRY="false"
+    export GEOMETRY_COMMAND=""
 fi
 
 export DIRECTORY=${OUTPUT}/${LARSOFT_VERSION}_${DATE}
@@ -25,7 +23,7 @@ if [ -d "$DIRECTORY" ]; then rm -r $DIRECTORY; fi
 mkdir -p $DIRECTORY
 cd $DIRECTORY
 
-cp $CRON_HOME/LArReco/scripts/uboone/PandoraSettings_MicroBooNE_Validation.xml ./PandoraSettings_Template.xml
+cp $CRON_HOME/LArReco/settings/uboone/PandoraSettings_MicroBooNE_Validation.xml ./PandoraSettings_Template.xml
 
 # Run Pandora
 counter=0; max=1000;
@@ -39,9 +37,9 @@ do
     fileIdentifier=$[`echo $i | grep -oP ${expression}`]
 
     outputFile=tmp_$fileIdentifier.root;
-    sed -e s,INPUT_FILE_NAME,$i, -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, -e s,GEOMETRY_FILE_NAME,$GEOMETRY_FILE_NAME, -e s,READ_GEOMETRY,$READ_GEOMETRY, PandoraSettings_Template.xml > tmp.xml
+    sed -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, PandoraSettings_Template.xml > tmp.xml
 
-    ${CRON_HOME}/LArReco/bin/PandoraInterface -r AllHitsNu -i tmp.xml -v /usera/marshall/Test/cron/LArReco/detectors/uboone.xml > /dev/null
+    ${CRON_HOME}/LArReco/bin/PandoraInterface -r AllHitsNu -e ${i} -i tmp.xml -v ${CRON_HOME}/LArReco/volumes/uboone.xml ${GEOMETRY_COMMAND} > /dev/null
     rm tmp.xml
 done
 

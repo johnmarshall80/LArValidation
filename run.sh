@@ -11,11 +11,11 @@ if [ ${LARSOFT_VERSION} == "v05_04_00" ]
 then
     export REGEX="reco1"
     export FILE_PATH="/r05/dune/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone_100k"
-    export GEOMETRY_COMMAND="-g /r05/dune/mcproduction_v05_04_00/geometry_uboone/Geometry_MicroBooNE.pndr"
+    export GEOMETRY_COMMAND="-g ${CRON_HOME}/LArReco/geometry/uboone.xml"
 else
     export REGEX="Neutrino"
     export FILE_PATH="/r05/lbne/mcproduction_${LARSOFT_VERSION}/prodgenie_bnb_nu_uboone"
-    export GEOMETRY_COMMAND=""
+    export GEOMETRY_COMMAND="-g ${CRON_HOME}/run/uboone_detector_only.xml"
 fi
 
 export DIRECTORY=${OUTPUT}/${LARSOFT_VERSION}_${DATE}
@@ -39,7 +39,7 @@ do
     outputFile=tmp_$fileIdentifier.root;
     sed -e s,OUTPUT_FILE_NAME,$outputFile, -e s,FILE_IDENTIFIER,$fileIdentifier, PandoraSettings_Template.xml > tmp.xml
 
-    ${CRON_HOME}/LArReco/bin/PandoraInterface -r AllHitsNu -e ${i} -i tmp.xml -v ${CRON_HOME}/LArReco/volumes/uboone.xml ${GEOMETRY_COMMAND} > /dev/null
+    ${CRON_HOME}/LArReco/bin/PandoraInterface -r AllHitsNu -e ${i} -i tmp.xml ${GEOMETRY_COMMAND} > /dev/null
     rm tmp.xml
 done
 

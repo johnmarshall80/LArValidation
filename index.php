@@ -28,6 +28,7 @@
     <select name="myversion">
         <option value="v04_16_00" <?php echo ($_POST['myversion'] == 'v04_16_00') ? 'selected' : ''; ?> >v04_16_00</option>
         <option value="v05_04_00" <?php echo ($_POST['myversion'] == 'v05_04_00') ? 'selected' : ''; ?> >v05_04_00</option>
+        <option value="v05_08_00" <?php echo ($_POST['myversion'] == 'v05_08_00') ? 'selected' : ''; ?> >v05_08_00</option>
      </select>
     Date:
     <input type="text" id="datepicker" name="datepicker"/> <input type="text" size=30 id="alternate" name="alternate"/>

@@ -2,7 +2,7 @@
 
 export CRON_HOME=/usera/marshall/Test/cron
 
-for i in PandoraSDK PandoraMonitoring LArContent LArReco
+for i in PandoraSDK PandoraMonitoring LArContent LArReco MachineLearningData
 do
     cd $CRON_HOME/$i
     git pull origin master

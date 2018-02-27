@@ -2,7 +2,7 @@
 
 export CRON_HOME=/usera/marshall/Test/cron
 export OUTPUT=/r05/dune/marshall/cron/run
-export FW_SEARCH_PATH=$CRON_HOME/LArReco/settings:/r05/dune/MachineLearningData:$FW_SEARCH_PATH
+export FW_SEARCH_PATH=$CRON_HOME/LArReco/settings:$CRON_HOME/MachineLearningData:$FW_SEARCH_PATH
 
 # Setup input files, etc.
 export LARSOFT_VERSION=${1}
@@ -54,11 +54,22 @@ do
 done
 
 # Merge to single ROOT file
-echo 'gROOT->LoadMacro("${CRON_HOME}/run/MergeTrees.C"); MergeTrees("Validation", "${DIRECTORY}/tmp_*.root", "${LARSOFT_VERSION}_${DATE}.root");' | root -b -l > /dev/null
+#echo 'gROOT->LoadMacro("${CRON_HOME}/run/MergeTrees.C"); MergeTrees("Validation", "${DIRECTORY}/tmp_*.root", "${LARSOFT_VERSION}_${DATE}.root");' | root -b -l > /dev/null
+root -b -l > /dev/null << EOF
+.L ${CRON_HOME}/run/MergeTrees.C
+MergeTrees("Validation", "${DIRECTORY}/tmp_*.root", "${LARSOFT_VERSION}_${DATE}.root")
+.q
+EOF
 rm ${DIRECTORY}/tmp*.root;
 
 # Process
-echo 'gROOT->LoadMacro("${CRON_HOME}/run/Process.C"); Process("${DIRECTORY}", "${LARSOFT_VERSION}_${DATE}.root");' | root -b -l
+#echo 'gROOT->LoadMacro("${CRON_HOME}/run/Process.C"); Process("${DIRECTORY}", "${LARSOFT_VERSION}_${DATE}.root");' | root -b -l
+root -b -l << EOF
+.L ${CRON_HOME}/LArReco/validation/Validation.C+
+.L Process.C
+Process("${DIRECTORY}", "${LARSOFT_VERSION}_${DATE}.root")
+.q
+EOF
 
 cd $CRON_HOME
 

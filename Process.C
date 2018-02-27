@@ -1,11 +1,10 @@
 void Process(const std::string &filePath, const std::string &fileName)
 {
-    gROOT->LoadMacro("/usera/marshall/Test/cron/LArReco/validation/Validation.C+");
-
     Parameters parameters;
-    parameters.m_mapFileName = "TableOutput.txt";
-    parameters.m_eventFileName = "CorrectEventList.txt";
+    parameters.m_mapFileName = filePath + "/TableOutput.txt";
+    parameters.m_eventFileName = filePath + "/CorrectEventList.txt";
     parameters.m_histogramOutput = true;
+    parameters.m_displayMatchedEvents = false;
 
     Validation(filePath + "/" + fileName, parameters);
 
@@ -17,7 +16,7 @@ void Process(const std::string &filePath, const std::string &fileName)
     TIterator *pIter = pCollection->MakeIterator();
     TObject *pObject(NULL);
 
-    while (pObject = pIter->Next())
+    while ( (pObject = pIter->Next()) )
     {
         TH1F *pHist = reinterpret_cast<TH1F*>(pObject);
 
